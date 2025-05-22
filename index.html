@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dost Ke Naam Joke</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0; padding: 0;
+      background: linear-gradient(to right, #1a1a1a, #990000);
+      font-family: 'Baloo 2', cursive;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .container {
+      width: 90%;
+      max-width: 500px;
+      background: rgba(0,0,0,0.6);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+    }
+    h1 {
+      color: #ffcc00;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+    input {
+      padding: 12px;
+      width: 100%;
+      font-size: 18px;
+      border-radius: 10px;
+      border: 2px solid #ffcc00;
+      margin: 15px 0 10px 0;
+      outline: none;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 200px;
+    }
+    button:hover {
+      background-color: #1ebe5d;
+    }
+    .joke-box {
+      margin-top: 25px;
+      padding: 15px;
+      background-color: #2c2c2c;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(255,0,0,0.5);
+      white-space: pre-line;
+      width: 100%;
+      font-size: 18px;
+      color: #ffcc00;
+      min-height: 100px;
+    }
+
+    .emoji-rain {
+      position: fixed;
+      top: -50px;
+      font-size: 30px;
+      animation: fall linear infinite;
+      color: #fff;
+      z-index: 9999;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    .particle {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background-color: #ffcc00;
+      border-radius: 50%;
+      animation: floatDown linear infinite;
+      opacity: 0.7;
+      z-index: 9998;
+    }
+
+    @keyframes floatDown {
+      0% { transform: translateY(-20px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Funny Joke Share Karo Apne Dost Ke Naam Se 🤣</h1>
+
+    <div class="joke-box" id="initialJoke"></div>
+
+    <input type="text" id="nameInput" placeholder="Apne dost ka naam likho" />
+    <button onclick="generatePersonalizedJoke()">Apne Dost Ke Naam Se Joke Banao</button>
+
+    <div class="joke-box" id="personalizedJoke" style="display:none;"></div>
+    <button id="whatsappShareBtn" style="display:none;" onclick="shareOnWhatsApp()">WhatsApp Pe Bhejo</button>
+  </div>
+
+  <script>
+    const jokes = [
+      "Pappu exam me fail ho gaya, maa boli: Beta chill kar, tu mera number one hai, first time fail hua hai!",
+      "Teacher: Newton kaun tha?\nStudent: Bhai ek engineer jo apple girte hi idea pakad liya!",
+      "Biwi: Suno ek kaam tha...\nPati: Arre yaar, ye dialogue sunte hi dar lagta hai!",
+      "Santa: Aaj nayi bike li!\nBanta: Wah! Kis model ki?\nSanta: EMI wali, poora loan liya bhai!",
+      "Mummy: Subah jaldi utho!\nBeta: Alarm hoon kya jo bajte hi uth jaun?",
+      "Girlfriend: Tum mujhe surprise kab doge?\nBoyfriend: Jab tu online na ho!",
+      "Boss: Late kyu aaye?\nEmployee: Sapne me office aaya tha, kaam kar ke thak gaya!",
+      "Pappu: Papa mujhe calculator chahiye.\nPapa: Beta, pichhli baar ka khaata to mila nahi!",
+      "Friend: Shaadi me kya diya?\nMe: Aashirwad aur Instagram pe follow!",
+      "Boy: Tum mujhe chhod dogi to main kya karunga?\nGirl: Shaadi kar lena, sab bhool jaoge!",
+      "Santa: Mobile phone kharab ho gaya.\nBanta: Kya hua?\nSanta: Girlfriend ka message aaya 'I love you', phone blast ho gaya!",
+      "Pappu: Mom, meri degree kahaan hai?\nMom: Facebook pe upload kar diya!",
+      "Teacher: Physics me kitne marks laaye?\nStudent: Bhai, zero marks ke saath hero ban gaya!",
+      "Girlfriend: Main tumse door jaungi!\nBoyfriend: Toh main GPS laga lunga!",
+      "Mummy: Khaana kha liya?\nBeta: Internet se download kar raha hoon!",
+      "Boss: Kaam complete kiya?\nEmployee: Kal tak complete kar dunga, bas aaj chill karna hai!",
+      "Pappu: Main ek din famous actor banunga.\nFriend: Pehle homework complete kar!",
+      "Santa: Gym join kiya?\nBanta: Haan, wahan sirf selfie lene jata hoon!",
+      "Teacher: Tumhara favourite subject kya hai?\nStudent: Holidays!",
+      "Mummy: Doctor ke paas kab jaoge?\nBeta: Jab dad bhi chala jaaye!"
+    ];
+
+    function getRandomJoke() {
+      return jokes[Math.floor(Math.random() * jokes.length)];
+    }
+
+    function getRandomJokeIndex() {
+      return Math.floor(Math.random() * jokes.length);
+    }
+
+    window.onload = () => {
+      const initialJokeDiv = document.getElementById("initialJoke");
+      initialJokeDiv.innerText = "Joke for you:\n\n" + getRandomJoke();
+
+      const emojis = ['🤣','😂','😜','😁','😆','😝'];
+      for (let i = 0; i < 20; i++) {
+        const emoji = document.createElement('div');
+        emoji.classList.add('emoji-rain');
+        emoji.style.left = Math.random() * 100 + "vw";
+        emoji.style.animationDuration = (3 + Math.random() * 3) + "s";
+        emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        document.body.appendChild(emoji);
+      }
+
+      for (let i = 0; i < 40; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.style.left = Math.random() * 100 + "vw";
+        particle.style.animationDuration = (2 + Math.random() * 4) + "s";
+        document.body.appendChild(particle);
+      }
+    };
+
+    function generatePersonalizedJoke() {
+      const nameInput = document.getElementById("nameInput").value.trim();
+      if (!nameInput) {
+        alert("Pehle apne dost ka naam likho!");
+        return;
+      }
+      const jokeIndex = getRandomJokeIndex();
+      const jokeText = jokes[jokeIndex];
+      const personalizedDiv = document.getElementById("personalizedJoke");
+      personalizedDiv.innerText = `${nameInput} ke taraf se ek joke hai:\n\n${jokeText}`;
+      personalizedDiv.style.display = "block";
+
+      const shareBtn = document.getElementById("whatsappShareBtn");
+      shareBtn.style.display = "inline-block";
+
+      shareBtn.dataset.friend = nameInput;
+      shareBtn.dataset.jokeIndex = jokeIndex;
+    }
+
+    function shareOnWhatsApp() {
+      const shareBtn = document.getElementById("whatsappShareBtn");
+      const friendName = shareBtn.dataset.friend || "aapke dost";
+      const jokeIndex = shareBtn.dataset.jokeIndex || 0;
+      const shareURL = `${window.location.origin}${window.location.pathname}?friend=${encodeURIComponent(friendName)}&joke=${jokeIndex}`;
+      const message = `${friendName} ke taraf se ek joke hai! Dekho aur haste raho:\n${shareURL}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`);
+    }
+  </script>
+</body>
+</html>
