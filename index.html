@@ -1,3 +1,19 @@
+function loadChat(name) {
+  document.getElementById("chatHeader").innerText = "Chat with " + name;
+  document.getElementById("chatBox").innerHTML = "";
+}
+
+function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const msg = input.value.trim();
+  if (msg === "") return;
+
+  const p = document.createElement("p");
+  p.className = "message right";
+  p.innerText = msg;
+  document.getElementById("chatBox").appendChild(p);
+  input.value = "";
+}
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -205,3 +221,19 @@
   </script>
 </body>
 </html>
+function loadChat(name) {
+  document.getElementById("chatHeader").innerText = "Chat with " + name;
+  document.getElementById("chatBox").innerHTML = "";
+}
+
+function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const msg = input.value.trim();
+  if (msg === "") return;
+
+  const p = document.createElement("p");
+  p.className = "message right";
+  p.innerText = msg;
+  document.getElementById("chatBox").appendChild(p);
+  input.value = "";
+}
